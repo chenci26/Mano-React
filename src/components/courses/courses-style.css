@@ -1,0 +1,39 @@
+.container-course{
+  width:100%;
+  padding:0;
+}
+
+.page-lists {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80%;
+  }
+  
+  .page-list {
+    cursor: pointer;
+    color: #ffffff;
+    background-color: #5e6248;
+    width: 25px;
+    margin: 3px;
+    text-align: center;
+  }
+  
+
+  .bgSvg {
+    height: 150%;
+    opacity: 0.5;
+  }
+
+
+.sortor{
+  background: transparent;
+  border:2px solid rgb(190, 190, 190);
+  color:rgb(124, 121, 121);
+  margin-top:5%;
+}
+
+.result{
+  margin-top:2%;
+}

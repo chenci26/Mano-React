@@ -1,2 +1,3 @@
-# Mano-React
-Mano
+## `npm install`
+
+## `npm start`
