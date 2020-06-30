@@ -3,25 +3,73 @@ import './login.scss'
 import { withRouter } from 'react-router-dom'
 import { error } from 'jquery'
 import { AiOutlineQuestion } from 'react-icons/ai'
+import NotFoundPage from '../NotFoundPage'
 
 var sha1 = require('sha1')
 
 function MyChangePassword(props) {
   const [newPassword, setNewpassword] = useState('')
+  const [confirmNewpassword, setConfirmNewpassword] = useState('')
   const { data, setData, username, setUsername } = props
 
-  useEffect(() => {
-    props.changeBackgroundColorBrown()
-  }, [])
-
-  async function getData(username) {
-    const response = await fetch(`http://localhost:3002/member/${username}`)
+  async function getUrl(furl) {
+    const response = await fetch(`http://localhost:3002/member/url/${furl}`)
     const json = await response.json()
     const items = json.rows
     setData(items)
 
     return data
   }
+
+  async function updatepassword(item, username) {
+    const request = new Request(
+      `http://localhost:3002/member/changepassword/${username}`,
+      {
+        method: 'PUT',
+        body: JSON.stringify(item),
+        headers: new Headers({
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        }),
+      }
+    )
+
+    const response = await fetch(request)
+    const data = await response.json()
+  }
+
+  async function deleteUrl(item) {
+    const request = new Request(`http://localhost:3002/member/deleteUrl`, {
+      method: 'DELETE',
+      body: JSON.stringify(item),
+      headers: new Headers({
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      }),
+    })
+
+    const response = await fetch(request)
+    const data = await response.json()
+  }
+
+  useEffect(() => {
+    props.changeBackgroundColorBrown()
+
+    let fUrl = props.location.pathname.substr(18)
+    console.log(fUrl)
+
+    getUrl(fUrl)
+    console.log(data)
+  }, [])
+
+  useEffect(() => {
+    console.log(data)
+    if (data.length > 0) setUsername(data[0].email)
+  }, [data])
+
+  useEffect(() => {
+    console.log(username)
+  }, [username])
 
   const displayForm = (
     <>
@@ -65,18 +113,37 @@ function MyChangePassword(props) {
               pattern={newPassword}
               title="密碼不相同"
               placeholder="請再次確認密碼"
+              onChange={(event) => {
+                setConfirmNewpassword(event.target.value)
+              }}
             />
             <div className="cgloginBlock">
               <input
                 value="send"
                 type="submit"
                 className="btn btn-primary mb2 cgloginBlock cgloginBtn cgBtn"
-                onMouseEnter={() => {
-                  // console.log(data)
-                  getData(username)
+                onMouseDown={() => {
+                  console.log(data)
                 }}
-                onClick={() => {
-                  // loginProcess(loginSuccessCallback)
+                onMouseUp={async () => {
+                  if (confirmNewpassword === newPassword) {
+                    await updatepassword(
+                      {
+                        pwd: sha1(newPassword),
+                      },
+                      username
+                    )
+                    await deleteUrl({
+                      fUrl: data[0].fUrl,
+                    })
+                  }
+                }}
+                onClick={async () => {
+                  if (confirmNewpassword === newPassword) {
+                    await alert('更改密碼成功！')
+                  } else {
+                    alert('二次密碼輸入不符！')
+                  }
                 }}
               />
             </div>
@@ -86,7 +153,24 @@ function MyChangePassword(props) {
     </>
   )
 
-  return <>{displayForm}</>
+  return (
+    <>
+      {data.length > 0 ? (
+        displayForm
+      ) : (
+        <h1
+          style={{
+            lineHeight: '75vh',
+            textAlign: 'center',
+            fontWeight: '800',
+            letterSpacing: '2px',
+          }}
+        >
+          Url is not exist!
+        </h1>
+      )}
+    </>
+  )
 }
 
 export default withRouter(MyChangePassword)

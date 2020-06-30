@@ -436,7 +436,7 @@ function App(props) {
               <Home changeBackgroundColorWhite={changeBackgroundColorWhite} />
             </Route>
 
-            <Route exact path="/mychangepassword/:params?">
+            <Route exact path="/mychangepassword/:furl?">
               <MyChangePassword
                 changeBackgroundColorBrown={changeBackgroundColorBrown}
                 data={data}
