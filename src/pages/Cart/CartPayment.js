@@ -315,6 +315,7 @@ function CartPayment(props) {
         </div>
         <div className="d-flex align-items-center justify-content-center mt-5">
           <Form.Group
+            style={{transform: "translateX(-27px)"}}
             className="text-center w-50"
             controlId="exampleForm.ControlSelect1"
           >
@@ -322,6 +323,7 @@ function CartPayment(props) {
               請選擇付款方式
             </Form.Label>
             <Form.Control
+              style={{transform: "translateX(-4px)"}}
               className="paymentOption w-40"
               as="select"
               onChange={(event) => {
@@ -354,14 +356,10 @@ function CartPayment(props) {
       <Container className="w-75">
         {paymentMethod === '信用卡' ? (
           <>
-            <div className="text-center">
-              <h3>付款資訊</h3>
-            </div>
-
             <Fragment>
               <Row>
                 <Container
-                  className="w-100 paymentFormBg"
+                  className="w-100 paymentFormBg mt-0 mb-0"
                   style={{ padding: '50px 100px' }}
                 >
                   <Col xs="12">

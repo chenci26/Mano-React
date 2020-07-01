@@ -13,6 +13,7 @@ export default function Slider() {
   const [width, setWidth] = useState(window.innerWidth)
   const [height, setHeight] = useState(window.innerHeight)
 
+
   useEffect(() => {
     window.addEventListener('resize', () => {
       const width = window.innerWidth
@@ -21,7 +22,7 @@ export default function Slider() {
       setWidth(width)
       setHeight(height)
     })
-
+  
     console.log(window.innerHeight)
   }, [])
 
@@ -65,7 +66,7 @@ export default function Slider() {
       <div className="Slider">
         <div
           style={{
-            width: width,
+            width: width
           }}
         >
           <ReactCompareImage

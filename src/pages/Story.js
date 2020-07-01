@@ -1,45 +1,23 @@
 import React, { useState, useEffect } from 'react'
 import { Link, withRouter } from 'react-router-dom'
-import {
-  Table,
-  Container,
-  Row,
-  Col,
-  ListGroup,
-  Image,
-  Form,
-} from 'react-bootstrap'
 
 import MyBanner from '../components/MyBanner'
 import AddFrom from '../components/Story/AddFrom'
 import List from '../components/Story/List'
 import ItemC from '../components/Story/ItemC'
-import ItemR from '../components/Comment/ItemR'
-//import ReplyForm from '../components/Comment/ReplyForm'
 import { Button } from 'react-bootstrap'
-import requestToServer from '../utils/requestToServer'
-import ReplyForm from '../components/Comment/ReplyForm'
 
 function Story(props) {
   const [com, setCom] = useState([])
   const [text, setText] = useState('')
-  const [username, setUser] = useState('')
-  const [heart, setHeart] = useState(0)
+  //const [username, setUser] = useState('')
+  const [member, setMember] = useState([])
   const [img, setImg] = useState('')
+  const [searchValue, setSearchValue] = useState("")
   // const [page, setPage] = useState('')
-  const {
-    replyCom,
-    setReplyCom,
-    replyText,
-    setReplyText,
-    replyUser,
-    setReplyUser,
-  } = props
-  const localMember = JSON.parse(localStorage.getItem('member')) || [
-    { memberName: '', memberId: '' },
-  ]
+
   async function getComFromServer() {
-    const request = new Request('http://localhost:3002/comment/', {
+    const request = new Request('http://localhost:3002/story/', {
       method: 'GET',
       headers: new Headers({
         Accept: 'application/json',
@@ -59,7 +37,7 @@ function Story(props) {
     // 開啟載入指示
 
     // 注意資料格式要設定，伺服器才知道是json格式
-    const request = new Request('http://localhost:3002/comment', {
+    const request = new Request('http://localhost:3002/story', {
       method: 'POST',
       body: JSON.stringify(item),
       headers: new Headers({
@@ -77,25 +55,18 @@ function Story(props) {
   }
 
   function doUpload(event) {
-    // const fd = new FormData(document.form1)
-    fetch('http://localhost:3002/comment/try-upload2', {
+    fetch('http://localhost:3002/story/try-upload2', {
       method: 'POST',
       body: new FormData(document.form1),
     })
       .then((r) => r.json())
       .then((obj) => {
-        //$('#myimg').attr('src', '/img-uploads/' +obj.filename)
         console.log(obj)
       })
   }
 
-  // function handleInsertSave (comment) {
-  //   const newComment = comment
-  //   addNewTodoItemToSever(newComment)
-  //   setCom(newComment)
-  //}
   async function updateComToServer(item) {
-    const request = new Request('http://localhost:3002/comment/' + item.cid, {
+    const request = new Request('http://localhost:3002/story/' + item.cid, {
       method: 'PUT',
       body: JSON.stringify(item),
       headers: new Headers({
@@ -108,9 +79,25 @@ function Story(props) {
     //const comments = data.rows
     //setCom(comments)
   }
+  async function deleteComToServer(item) {
+    const request = new Request('http://localhost:3002/story/' + item.cid, {
+      method: 'Delete',
+      headers: new Headers({
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      }),
+    })
+    const response = await fetch(request)
+    const data = await response.json()
+  }
   // 一開始就會開始載入資料
   useEffect(() => {
+    props.changeBackgroundColorWhite()
     getComFromServer()
+    const member = JSON.parse(localStorage.getItem('member')) || [
+      { memberName: '', memberId: '' },
+    ]
+    setMember(member[0].memberName)
   }, [])
 
   // 每次total資料有變動就會3秒後關掉載入指示
@@ -128,81 +115,30 @@ function Story(props) {
       setCom(newCom)
     }
   }
-  const handleReplyToggle = (cid) => {
-    const newCom = [...com]
-    const comIndex = com.findIndex((v, i) => v.cid === cid)
-    if (comIndex !== -1) {
-      // console.log(newCom)
-      // console.log(newCom[comIndex])
-      // console.log(comIndex)
-      // console.log(newCom[comIndex].edited)
-      // for(let i in newCom[comIndex]){
-      //   let o = newCom[comIndex][i]
-      //   console.log(i, o)
-      // }
-      // console.log(newCom[comIndex].constructor.name)
-      newCom[comIndex].reply = !newCom[comIndex].reply
-      // console.log(newCom)
-      // console.log(newCom[comIndex])
-      // console.log(newCom[comIndex].edited)
-      updateComToServer(newCom[comIndex])
-      setCom(newCom)
-    }
-  }
-  const handleReplySave = (id) => {
-    const newCom = [...replyCom]
-    const comIndex = replyCom.findIndex((v, i) => v.id === id)
-    if (comIndex !== -1) {
-      newCom[comIndex].reply = !newCom[comIndex].reply
-      addNewTodoItemToSever(newCom[comIndex])
-      setReplyCom(newCom)
-    }
-  }
   const handleEditedToggle = (cid) => {
     const newCom = [...com]
     const comIndex = com.findIndex((v, i) => v.cid === cid)
     if (comIndex !== -1) {
-      // console.log(newCom)
-      // console.log(newCom[comIndex])
-      // console.log(comIndex)
-      // console.log(newCom[comIndex].edited)
-      // for(let i in newCom[comIndex]){
-      //   let o = newCom[comIndex][i]
-      //   console.log(i, o)
-      // }
-      // console.log(newCom[comIndex].constructor.name)
       newCom[comIndex].edited = !newCom[comIndex].edited
-      // console.log(newCom)
-      // console.log(newCom[comIndex])
-      // console.log(newCom[comIndex].edited)
       updateComToServer(newCom[comIndex])
       setCom(newCom)
     }
   }
-  const handleEditedSave = (cid, replyUser, replyText) => {
-    const newCom = [...replyCom]
-    const comIndex = replyCom.findIndex((v, i) => v.replyUser === replyUser)
+  const handleEditedSave = (cid, member, text) => {
+    const newCom = [...com]
+    const comIndex = com.findIndex((v, i) => v.cid === cid)
     if (comIndex !== -1) {
-      newCom[comIndex].replyUser = replyUser
-      newCom[comIndex].replyText = replyText
+      newCom[comIndex].member = member
+      newCom[comIndex].text = text
       updateComToServer(newCom[comIndex])
       // newCom[comIndex].edited = !newCom[comIndex].edited
-      setReplyCom(newCom)
+      setCom(newCom)
     }
     handleEditedToggle(cid)
   }
-  const handleEditedHeartPlus = (cid, value) => {
-    const newHeart = heart + value
-    const comIndex = com.findIndex((v, i) => v.cid === cid)
-    if (comIndex !== -1) {
-      console.log(heart)
-      com[comIndex].heart = heart
-      updateComToServer(com[comIndex])
-      setHeart(newHeart)
-    }
-  }
   const handleDelete = (cid) => {
     const newCom = com.filter((v, i) => v.cid !== cid)
+    deleteComToServer(cid)
     setCom(newCom)
   }
   const handleImgToDirectory = (event) => {
@@ -210,61 +146,74 @@ function Story(props) {
     doUpload(event)
     alert('上傳成功')
   }
+  const handleSearch = (searchValue) => {
+    const result = com.filter((obj) =>
+      obj.username.includes(searchValue)
+    )
+    setCom(result)
+  }
   return (
     <>
-      <MyBanner title="社群" lead="mano友" />
-      <hr />
-      {/* <Table responsive style={{ color: '#5C6447' }}>
-        <thead>
-          <tr>
-            <th colSpan={4}>
-              <Form name="form1">
-                <Form.Group>
-                  <Form.File
-                    id="avatar"
-                    name="avatar"
-                    onChange={(event) => {
-                      handleImgToDirectory(event)
-                    }}
-                  />
-                  <button
-                    className="btn btn-primary"
-                    onClick={(event) => {
-                      handleImgToDirectory()
-                    }}
-                  >
-                    儲存為新的大頭貼
-                  </button>
-                </Form.Group>
-              </Form>
-              <img src="" alt="" id="myimg"></img>
-            </th>
-          </tr>
-        </thead>
-      </Table> */}
-      <AddFrom
-        username={username}
-        text={text}
-        img={img}
-        com={com}
-        setUser={setUser}
-        setText={setText}
-        setImg={setImg}
-        setCom={setCom}
-        addNewTodoItemToSever={addNewTodoItemToSever}
-        doUpload={doUpload}
-        handleImgToDirectory={handleImgToDirectory}
-      />
-      <List
-        com={com}
-        handleCompleted={handleCompleted}
-        handleDelete={handleDelete}
-        handleReplyToggle={handleReplyToggle}
-        handleEditedToggle={handleEditedToggle}
-        handleEditedSave={handleEditedSave}
-        handleCompleted={handleCompleted}
-        handleEditedHeartPlus={handleEditedHeartPlus}
-      />
+      <div className="container">
+        <div className="row">
+          <div className="col-4"></div>
+          <div className="col-7 d-flex">
+            <div className="col-9">
+              <AddFrom
+                member={member}
+                text={text}
+                img={img}
+                com={com}
+                setMember={setMember}
+                setText={setText}
+                setImg={setImg}
+                setCom={setCom}
+                addNewTodoItemToSever={addNewTodoItemToSever}
+                doUpload={doUpload}
+                handleImgToDirectory={handleImgToDirectory}
+              />
+            </div>
+            <div className="col-3">
+              <input
+                type="search"
+                style={{ width:'100px',border: '1px solid #D4AE5C' }}
+                placeholder="找朋友"
+                onFocus={{ border: '1px solid grey' }}
+                value={searchValue}
+                //className="btn-success btn-block btn-rounded z-depth-1 text-center"
+                onChange={(event)=> {
+                  setSearchValue(event.target.value)
+                  if (event.target.value === "") getComFromServer()
+                }}
+                onKeyPress={(event) => {
+                  //handleSearch()
+                    console.log(searchValue)
+                  console.log(
+                    com.filter((obj) =>
+                      obj.username.includes(searchValue)
+                    )
+                  )
+                  
+                  //com.filter().includes(event.target.value)
+                  handleSearch(searchValue)
+
+
+                }}
+              ></input>
+            </div>
+            <div className="col-1"></div>
+          </div>
+        </div>
+        <div style={{ height: '50px' }}></div>
+        <List
+          com={com}
+          handleCompleted={handleCompleted}
+          handleDelete={handleDelete}
+          handleEditedToggle={handleEditedToggle}
+          handleEditedSave={handleEditedSave}
+          handleCompleted={handleCompleted}
+        />
+      </div>
     </>
   )
 }
