@@ -17,9 +17,9 @@ function MyLogin(props) {
     loginErrors,
   } = props
 
-  useEffect(()=>{
+  useEffect(() => {
     props.changeBackgroundColorBrown()
-  },[])
+  }, [])
 
   async function getData(username) {
     const response = await fetch(`http://localhost:3002/member/${username}`)
@@ -48,9 +48,9 @@ function MyLogin(props) {
     localStorage.setItem('member', JSON.stringify(data))
     //alert('登入成功，跳到Welcome')
     const path = props.history.location.pathname
-    if(path.includes("/mall")) props.history.push("/mall/welcome")
-    else props.history.push("/life/welcome")
-}
+    if (path.includes('/mall')) props.history.push('/mall/welcome')
+    else props.history.push('/life/welcome')
+  }
 
   // logout成功時的callback
   const logoutSuccessCallback = () => {
@@ -60,16 +60,14 @@ function MyLogin(props) {
 
   const forgetCallback = () => {
     const path = props.history.location.pathname
-    if(path.includes("/mall")) props.history.push("/mall/forgetpwd")
-    else props.history.push("/life/forgetpwd")
-
+    if (path.includes('/mall')) props.history.push('/mall/forgetpwd')
+    else props.history.push('/life/forgetpwd')
   }
 
   const registerCallback = () => {
     const path = props.history.location.pathname
-    if(path.includes("/mall")) props.history.push("/mall/register")
-    else props.history.push("/life/register")
-
+    if (path.includes('/mall')) props.history.push('/mall/register')
+    else props.history.push('/life/register')
   }
 
   const forgetButton = (
@@ -98,8 +96,7 @@ function MyLogin(props) {
     </div>
   )
 
-  const displayForm =  (
-    
+  const displayForm = (
     <>
       <form action="" method="">
         <div className="bg position-relative d-flex">
@@ -135,7 +132,7 @@ function MyLogin(props) {
                     value="login"
                     type="submit"
                     className="btn btn-primary mb2 loginBlock loginBtn"
-                    onMouseEnter={() => {
+                    onMouseDown={() => {
                       console.log(data)
                       getData(username)
                     }}
