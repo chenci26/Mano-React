@@ -120,6 +120,8 @@ function MyRegister(props) {
                     setPassword(event.target.value)
                     setInsertData({
                       ...insertData,
+                      memberImg: "20200503094045.jpg",
+                      memberId: +new Date(),
                       pwd: sha1(event.target.value),
                     })
                   }}

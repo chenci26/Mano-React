@@ -147,6 +147,7 @@ function MyChangePassword(props) {
                     confirmNewpassword.length >= 8
                   ) {
                     await alert('更改密碼成功！')
+                    props.history.push("/mall/login")
                   } else {
                     alert('二次密碼輸入不符或密碼少於八個字！')
                   }
