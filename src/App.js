@@ -29,6 +29,7 @@ import Membercenter from './pages/Membercenter'
 import Coupon from './pages/Coupon'
 import MemberOrders from "./pages/MemberOrders"
 import MemberItemtrack from "./pages/MemberItemTrack"
+import MemberStory from './pages/MemberStory'
 
 import NotFoundPage from './pages/NotFoundPage'
 
@@ -407,6 +408,12 @@ function App(props) {
             </Route>
             <Route exact path="/mall/membercenter/memberitemtracking">
               <MemberItemtrack/>
+            </Route>
+            <Route exact path="/mall/membercenter/memberstory">
+              <MemberStory />
+            </Route>
+            <Route exact path="/life/membercenter/memberstory">
+              <MemberStory />
             </Route>
             <Route exact path="/life/membercenter">
               <Membercenter changeBackgroundColorDark={changeBackgroundColorDark}/>

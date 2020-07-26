@@ -54,7 +54,7 @@ function ItemTracking(props) {
           已成功加入購物車</Modal.Body>
         <Modal.Footer className="d-flex justify-content-center pb-4" style={{background: "#EFF3EC", border: "none"}}>
           <Button style={{background: "transparent", color: "#5C6447", borderRadius: "2px"}} variant="secondary" onClick={handleClose} className="addcart-button">
-            繼續購物
+            繼續留在願望清單
           </Button>
           <Button
             style={{background: "transparent", color: "#C5895A", borderRadius: "2px"}}

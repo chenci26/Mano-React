@@ -42,11 +42,6 @@
 
 @media  (max-width: 768px) {
    .track-card{
-    position: relative;
-    width: 200px;
-    height: 350px; 
-    margin: 5px;
-    background-color: white;
+    left: 15%;
 } 
-
 }

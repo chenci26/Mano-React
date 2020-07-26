@@ -16,6 +16,7 @@ function MemberSideLink(props) {
     '/coupon',
     '/memberitemtracking',
     '/life/membercenter',
+    "/memberstory"
   ]
   const pathnames2 = ['會員資料', '我的訂單', '折價券', '我的追蹤', '會員資料']
 
@@ -29,6 +30,9 @@ function MemberSideLink(props) {
     locationPathname = '/memberitemtracking'
   if (locationPathname.includes('/membercenter/memberorders'))
     locationPathname = '/memberorders'
+    if (locationPathname.includes('/membercenter/memberstory'))
+    locationPathname = '/memberstory'
+
 
   const index = pathlist.findIndex((v) => v === locationPathname)
 
@@ -86,6 +90,13 @@ function MemberSideLink(props) {
                     >
                       我的追蹤
                     </ListGroup.Item>
+                    <ListGroup.Item
+                      action
+                      href="/mall/membercenter/memberstory"
+                      style={index === 5 ? activeStyle : aListStyle}
+                    >
+                      文章管理
+                    </ListGroup.Item>
                   </ListGroup>
                 </div>
               </nav>
@@ -138,6 +149,13 @@ function MemberSideLink(props) {
                 >
                   我的追蹤
                 </ListGroup.Item>
+                <ListGroup.Item
+                      action
+                      href="/mall/membercenter/memberstory"
+                      style={index === 5 ? activeStyle : aListStyle}
+                    >
+                      文章管理
+                    </ListGroup.Item>
               </ListGroup>
               </div>
               </nav>
